@@ -1,0 +1,20 @@
+*.cdi binary
+*.clz binary
+*.doc binary
+*.docx binary
+*.gitignore text
+*.ini text eol=crlf
+*.ir binary
+*.json text eol=crlf
+*.mdb binary
+*.pdf binary
+*.png binary
+*.ps1 text eol=crlf
+*.sgd binary
+*.sgd_ binary
+*.smw binary
+*.tmf binary
+*.txt text eol=crlf
+*.umc binary
+*.usp text eol=crlf
+*.vtp binary

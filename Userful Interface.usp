@@ -1,0 +1,539 @@
+/*******************************************************************************************
+  SIMPL+ Module Information
+  (Fill in comments below)
+*******************************************************************************************/
+/*
+Dealer Name: IMS Technologies
+System Name: Userful Interface
+System Number:
+Programmer: MJP
+Comments:
+*/
+
+/*******************************************************************************************
+  Compiler Directives
+*******************************************************************************************/
+//#SYMBOL_NAME ""
+//#CATEGORY "0" // Miscellaneous
+#DEFAULT_VOLATILE
+#ENABLE_TRACE
+
+/*******************************************************************************************
+  Include Libraries
+  (Uncomment and include additional libraries as needed)
+*******************************************************************************************/
+// #CRESTRON_LIBRARY ""
+// #USER_LIBRARY ""
+#USER_SIMPLSHARP_LIBRARY "Userful"
+
+
+/*******************************************************************************************
+  DIGITAL, ANALOG and SERIAL INPUTS and OUTPUTS
+*******************************************************************************************/
+                                         
+DIGITAL_INPUT  GetSources, GetZones, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, SetPreset[8], _SKIP_;
+ANALOG_INPUT SetZone[10], _SKIP_, SetDisplay[10];
+
+STRING_OUTPUT _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, _SKIP_, SourceName$[8];
+ANALOG_OUTPUT _SKIP_, Zone_Fb[10], _SKIP_, Display_Fb[10];
+
+
+/*******************************************************************************************
+  Parameters
+  (Uncomment and declare parameters as needed)
+*******************************************************************************************/
+
+STRING_PARAMETER _SKIP_, _SKIP_, _SKIP_, Url$[100],UserName$[50],Password$[50];
+
+
+/*******************************************************************************************
+  Global Variables
+*******************************************************************************************/
+UserfulControl UF;
+
+/*******************************************************************************************
+  Functions
+*******************************************************************************************/
+
+
+/*******************************************************************************************
+  Event Handlers
+*******************************************************************************************/
+
+PUSH GetSources
+{
+	UF.getSourceInfo();
+} 
+
+PUSH GetZones
+{
+	UF.getZoneInfo();
+} 
+
+
+PUSH SetPreset
+{
+	Integer i;
+	i = GetLastModifiedArrayIndex();
+	Switch(i)
+    {
+		Case(1):
+		{
+			UF.setPreset("Preset_1");		
+		}
+		Case(2):
+		{
+			UF.setPreset("Preset_2");		
+		}
+		Case(3):
+		{
+			UF.setPreset("Preset_3");		
+		}
+		Case(4):
+		{
+			UF.setPreset("Preset_4");		
+		}
+		Case(5):
+		{
+			UF.setPreset("Preset_5");		
+		}
+		Case(6):
+		{
+			UF.setPreset("Preset_6");		
+		}
+		Case(7):
+		{
+			UF.setPreset("Preset_7");		
+		}
+		Case(8):
+		{
+			UF.setPreset("Preset_8");		
+		}
+	}
+}
+   
+
+CHANGE SetZone
+{
+	Integer i, val;
+	i = GetLastModifiedArrayIndex();
+	val = SetZone[GetLastModifiedArrayIndex()];
+	Switch(i)
+    {
+		Case(1):
+		{
+			if(val = 0)
+			{
+				UF.setZone("Zone-1", "Blank");
+			}
+			else if(val = 1)
+			{
+				UF.setZone("Zone-1", "Media_WP");
+			}
+			else if(val = 2)
+			{
+				UF.setZone("Zone-1", "BrightSign_1");
+			}
+			else if(val = 3)
+			{
+				UF.setZone("Zone-1", "BrightSign_2");
+			}
+			else if(val = 4)
+			{
+				UF.setZone("Zone-1", "CableBox");
+			}
+			else if(val = 5)
+			{
+				UF.setZone("Zone-1", "WP_HDMI");
+			}
+			else if(val = 6)
+			{
+				UF.setZone("Zone-1", "PC");
+			}
+			else if(val = 7)
+			{
+				UF.setZone("Zone-1", "AirMedia");
+			}
+			else if(val = 8)
+			{
+				UF.setZone("Zone-1", "Userful");
+			}
+		}
+		Case(2):
+		{
+			if(val = 0)
+			{
+				UF.setZone("Zone-2", "Blank");
+			}
+			else if(val = 1)
+			{
+				UF.setZone("Zone-2", "Media_WP");
+			}
+			else if(val = 2)
+			{
+				UF.setZone("Zone-2", "BrightSign_1");
+			}
+			else if(val = 3)
+			{
+				UF.setZone("Zone-2", "BrightSign_2");
+			}
+			else if(val = 4)
+			{
+				UF.setZone("Zone-2", "CableBox");
+			}
+			else if(val = 5)
+			{
+				UF.setZone("Zone-2", "WP_HDMI");
+			}
+			else if(val = 6)
+			{
+				UF.setZone("Zone-2", "PC");
+			}
+			else if(val = 7)
+			{
+				UF.setZone("Zone-2", "AirMedia");
+			}
+			else if(val = 8)
+			{
+				UF.setZone("Zone-2", "Userful");
+			}
+		}
+		Case(3):
+		{
+			if(val = 0)
+			{
+				UF.setZone("Zone-3", "Blank");
+			}
+			else if(val = 1)
+			{
+				UF.setZone("Zone-3", "Media_WP");
+			}
+			else if(val = 2)
+			{
+				UF.setZone("Zone-3", "BrightSign_1");
+			}
+			else if(val = 3)
+			{
+				UF.setZone("Zone-3", "BrightSign_2");
+			}
+			else if(val = 4)
+			{
+				UF.setZone("Zone-3", "CableBox");
+			}
+			else if(val = 5)
+			{
+				UF.setZone("Zone-3", "WP_HDMI");
+			}
+			else if(val = 6)
+			{
+				UF.setZone("Zone-3", "PC");
+			}
+			else if(val = 7)
+			{
+				UF.setZone("Zone-3", "AirMedia");
+			}
+			else if(val = 8)
+			{
+				UF.setZone("Zone-3", "Userful");
+			}
+		}
+		Case(4):
+		{
+			if(val = 0)
+			{
+				UF.setZone("Zone-4", "Blank");
+			}
+			else if(val = 1)
+			{
+				UF.setZone("Zone-4", "Media_WP");
+			}
+			else if(val = 2)
+			{
+				UF.setZone("Zone-4", "BrightSign_1");
+			}
+			else if(val = 3)
+			{
+				UF.setZone("Zone-4", "BrightSign_2");
+			}
+			else if(val = 4)
+			{
+				UF.setZone("Zone-4", "CableBox");
+			}
+			else if(val = 5)
+			{
+				UF.setZone("Zone-4", "WP_HDMI");
+			}
+			else if(val = 6)
+			{
+				UF.setZone("Zone-4", "PC");
+			}
+			else if(val = 7)
+			{
+				UF.setZone("Zone-4", "AirMedia");
+			}
+			else if(val = 8)
+			{
+				UF.setZone("Zone-4", "Userful");
+			}
+		}
+		Case(5):
+		{
+			if(val = 0)
+			{
+				UF.setZone("Zone-5", "Blank");
+			}
+			else if(val = 1)
+			{
+				UF.setZone("Zone-5", "Media_WP");
+			}
+			else if(val = 2)
+			{
+				UF.setZone("Zone-5", "BrightSign_1");
+			}
+			else if(val = 3)
+			{
+				UF.setZone("Zone-5", "BrightSign_2");
+			}
+			else if(val = 4)
+			{
+				UF.setZone("Zone-5", "CableBox");
+			}
+			else if(val = 5)
+			{
+				UF.setZone("Zone-5", "WP_HDMI");
+			}
+			else if(val = 6)
+			{
+				UF.setZone("Zone-5", "PC");
+			}
+			else if(val = 7)
+			{
+				UF.setZone("Zone-5", "AirMedia");
+			}
+			else if(val = 8)
+			{
+				UF.setZone("Zone-5", "Userful");
+			}
+		}
+		Case(6):
+		{
+			if(val = 0)
+			{
+				UF.setZone("Zone-6", "Blank");
+			}
+			else if(val = 1)
+			{
+				UF.setZone("Zone-6", "Media_WP");
+			}
+			else if(val = 2)
+			{
+				UF.setZone("Zone-6", "BrightSign_1");
+			}
+			else if(val = 3)
+			{
+				UF.setZone("Zone-6", "BrightSign_2");
+			}
+			else if(val = 4)
+			{
+				UF.setZone("Zone-6", "CableBox");
+			}
+			else if(val = 5)
+			{
+				UF.setZone("Zone-6", "WP_HDMI");
+			}
+			else if(val = 6)
+			{
+				UF.setZone("Zone-6", "PC");
+			}
+			else if(val = 7)
+			{
+				UF.setZone("Zone-6", "AirMedia");
+			}
+			else if(val = 8)
+			{
+				UF.setZone("Zone-6", "Userful");
+			}
+		}
+		Case(7):
+		{
+			if(val = 0)
+			{
+				UF.setZone("Zone-7", "Blank");
+			}
+			else if(val = 1)
+			{
+				UF.setZone("Zone-7", "Media_WP");
+			}
+			else if(val = 2)
+			{
+				UF.setZone("Zone-7", "BrightSign_1");
+			}
+			else if(val = 3)
+			{
+				UF.setZone("Zone-7", "BrightSign_2");
+			}
+			else if(val = 4)
+			{
+				UF.setZone("Zone-7", "CableBox");
+			}
+			else if(val = 5)
+			{
+				UF.setZone("Zone-7", "WP_HDMI");
+			}
+			else if(val = 6)
+			{
+				UF.setZone("Zone-7", "PC");
+			}
+			else if(val = 7)
+			{
+				UF.setZone("Zone-7", "AirMedia");
+			}
+			else if(val = 8)
+			{
+				UF.setZone("Zone-7", "Userful");
+			}
+		}
+		Case(8):
+		{
+			if(val = 0)
+			{
+				UF.setZone("Zone-8", "Blank");
+			}
+			else if(val = 1)
+			{
+				UF.setZone("Zone-8", "Media_WP");
+			}
+			else if(val = 2)
+			{
+				UF.setZone("Zone-8", "BrightSign_1");
+			}
+			else if(val = 3)
+			{
+				UF.setZone("Zone-8", "BrightSign_2");
+			}
+			else if(val = 4)
+			{
+				UF.setZone("Zone-8", "CableBox");
+			}
+			else if(val = 5)
+			{
+				UF.setZone("Zone-8", "WP_HDMI");
+			}
+			else if(val = 6)
+			{
+				UF.setZone("Zone-8", "PC");
+			}
+			else if(val = 7)
+			{
+				UF.setZone("Zone-8", "AirMedia");
+			}
+			else if(val = 8)
+			{
+				UF.setZone("Zone-8", "Userful");
+			}
+		}
+		Case(9):
+		{
+			if(val = 0)
+			{
+				UF.setZone("Zone-9", "Blank");
+			}
+			else if(val = 1)
+			{
+				UF.setZone("Zone-9", "Media_WP");
+			}
+			else if(val = 2)
+			{
+				UF.setZone("Zone-9", "BrightSign_1");
+			}
+			else if(val = 3)
+			{
+				UF.setZone("Zone-9", "BrightSign_2");
+			}
+			else if(val = 4)
+			{
+				UF.setZone("Zone-9", "CableBox");
+			}
+			else if(val = 5)
+			{
+				UF.setZone("Zone-9", "WP_HDMI");
+			}
+			else if(val = 6)
+			{
+				UF.setZone("Zone-9", "PC");
+			}
+			else if(val = 7)
+			{
+				UF.setZone("Zone-9", "AirMedia");
+			}
+			else if(val = 8)
+			{
+				UF.setZone("Zone-9", "Userful");
+			}
+		}
+		Case(10):
+		{
+			if(val = 0)
+			{
+				UF.setZone("Zone-10", "Blank");
+			}
+			else if(val = 1)
+			{
+				UF.setZone("Zone-10", "Media_WP");
+			}
+			else if(val = 2)
+			{
+				UF.setZone("Zone-10", "BrightSign_1");
+			}
+			else if(val = 3)
+			{
+				UF.setZone("Zone-10", "BrightSign_2");
+			}
+			else if(val = 4)
+			{
+				UF.setZone("Zone-10", "CableBox");
+			}
+			else if(val = 5)
+			{
+				UF.setZone("Zone-10", "WP_HDMI");
+			}
+			else if(val = 6)
+			{
+				UF.setZone("Zone-10", "PC");
+			}
+			else if(val = 7)
+			{
+				UF.setZone("Zone-10", "AirMedia");
+			}
+			else if(val = 8)
+			{
+				UF.setZone("Zone-10", "Userful");
+			}
+		}
+	}
+}
+
+CHANGE SetDisplay
+{
+}
+
+/* 
+eventhandler updateZonesHandler (UserfulControl sender, EventArgs args)
+{
+}
+*/
+
+
+/*******************************************************************************************
+  Main()
+*******************************************************************************************/
+Function Main()
+{
+	WaitForInitializationComplete();
+	UF.usr.user = UserName$;
+	UF.usr.password = Password$;
+	UF.hostAddress = Url$;
+	//RegisterEvent(UF, UpdateZones, updateZonesHandler);
+
+}
+
