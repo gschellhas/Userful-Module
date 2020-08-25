@@ -19,14 +19,30 @@ namespace Userful
         public string sourceId { get; set; }
         public string sourceName { get; set; }
         public string sourceType { get; set; }
+        private bool inUse { get; set; }
 
         [JsonProperty("params")] //decorating
         public List <ParamsItem> parameters { get; set; }
+
+        public SourcesItem()
+        {
+            this.inUse = false;
+        }
+
+        public void setInUse(bool val)
+        {
+            inUse = val;
+        }
+
+        public bool getInUse()
+        {
+            return inUse;
+        }
     }
 
     public class UserfulSource
     {
-        public List<SourcesItem> sources { get; set; }
+        public List<SourcesItem> sources { get; set; } 
     }
 
 
@@ -53,8 +69,12 @@ namespace Userful
         public List<ZonesItem> zones { get; set; }
     }
 
+    public class UserfulPreset
+    {
+        public List<PresetItem> presets { get; set; }
+    }
 
-    public class Preset
+    public class PresetItem
     {
         public string id { get; set; }
         public string name { get; set; }
