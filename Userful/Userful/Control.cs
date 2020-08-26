@@ -29,6 +29,8 @@ namespace Userful
         private UserfulPreset presets;
         //public UserfulDisplay dispalys;
 
+        private CTimer timer;
+
         public event TriggerUpdateSourcesInUseHandler UpdateSourcesInUse;
         public delegate void TriggerUpdateSourcesInUseHandler(object o, EventArgs e);
 
@@ -37,6 +39,7 @@ namespace Userful
         {
             usr = new User();
             hostAddress = "http://localhost:9000";
+            timer = new CTimer(timerFn, 100);
         }
 
         //private void updateZones(object o)
@@ -46,8 +49,15 @@ namespace Userful
             sources = getSourceInfo();
             zones = getZoneInfo();
             presets = getPresetInfo();
+            timer.Reset(1);
         }
 
+        public void timerFn(object o)
+        {
+            if (debug == 1) { CrestronConsole.PrintLine("Running timerFunction to Find Sources in Use and Update Sources"); }
+            FindSourcesInUse();
+            updateSources();
+        }
 
 
         private string getSessionId() 
@@ -193,7 +203,7 @@ namespace Userful
             {
                 CrestronConsole.PrintLine("Userful Module: Preset Named {0} doesnt exist!", name);
                 CrestronConsole.PrintLine("Available presets:");
-                presets.presets.ForEach(x => CrestronConsole.PrintLine( "Name: {0), Id: {1}", x.name, x.id));
+                presets.presets.ForEach(x => CrestronConsole.PrintLine( "Name: {0}, Id: {1}", x.name, x.id));
             }
             getSysInfo();
 
@@ -210,6 +220,7 @@ namespace Userful
         {
             if(zones.zones.Exists(x => x.zoneName == zone) && sources.sources.Exists(x => x.sourceName == source))
             {
+                   /*
                 //See if the old routed source was in the list and set it to InUse False
                 if (debug == 1) { CrestronConsole.PrintLine("SetZoneSources: Checking if Old Zone Source is in list then setting it to false"); }
                 if (sources.sources.Exists(x => x.sourceId == zones.zones.Find(y => y.zoneName == zone).playingSourceId))
@@ -220,60 +231,53 @@ namespace Userful
                 else
                 {
                     CrestronConsole.PrintLine("Userful: Setting Zone Source: Old Source not Found: {0}", zones.zones.Find(y => y.zoneName == zone).playingSourceId);
-                }
-                try
+                }*/
+                using (var httpClient = new HttpClient())
                 {
-                    using (var httpClient = new HttpClient())
+                    cookie = getSessionId();
+                    HttpClientRequest req = new HttpClientRequest();
+                    HttpClientResponse resp;
+                    req.Url = new UrlParser(hostAddress + "/api/zones/byname/" + zones.zones.Find(x => x.zoneName.Equals(zone)).zoneName + "/switch?destinationSourceName=" + sources.sources.Find(x => x.sourceName.Equals(source)).sourceName);
+                    req.RequestType = RequestType.Put;
+                    req.Header.SetHeaderValue("cookie", cookie);
+                    try
                     {
-                        cookie = getSessionId();
-                        HttpClientRequest req = new HttpClientRequest();
-                        HttpClientResponse resp;
-                        req.Url = new UrlParser(hostAddress + "/api/zones/byname/" + zones.zones.Find(x => x.zoneName.Equals(zone)).zoneName + "/switch?destinationSourceName=" + sources.sources.Find(x => x.sourceName.Equals(source)).sourceName);
-                        req.RequestType = RequestType.Put;
-                        req.Header.SetHeaderValue("cookie", cookie);
-                        try
+                        resp = httpClient.Dispatch(req);
+                        var h = handlePutZone(resp);
+                        if (debug == 1)
                         {
-                            resp = httpClient.Dispatch(req);
-                            var h = handlePutZone(resp);
-                            if (debug == 1)
-                            {
-                                CrestronConsole.PrintLine("zoneId:{0}, zoneName:{1}, isPlaying:{2}, playingSourceId:{3}, videowallId: {4}", h.zoneId, h.zoneName, h.isPlaying, h.playingSourceId, h.videowallId);
-                            }
-                            sources.sources.Find(x => x.sourceName.Equals(source)).setInUse(true);
+                            CrestronConsole.PrintLine("zoneId:{0}, zoneName:{1}, isPlaying:{2}, playingSourceId:{3}, videowallId: {4}", h.zoneId, h.zoneName, h.isPlaying, h.playingSourceId, h.videowallId);
                         }
-                        catch (Exception e)
-                        {
-                            CrestronConsole.PrintLine("Setting a Zone Source Failed! Zone: {0}, Source {1}", zone, source);
-                            CrestronConsole.PrintLine("Exception: {0}", e.Message);
-                        }
-                        updateSources();
+                        //sources.sources.Find(x => x.sourceName.Equals(source)).setInUse(true);
                     }
-                }
-                catch (Exception)
-                {
-                    CrestronConsole.PrintLine("Your Issue is here!, Line 224 Try Catch");
+                    catch (Exception e)
+                    {
+                        CrestronConsole.PrintLine("Setting a Zone Source Failed! Zone: {0}, Source {1}", zone, source);
+                        CrestronConsole.PrintLine("Exception: {0}", e.Message);
+                    }
+                    playZone(zone);
                 }
             }
             else if(zones.zones.Exists(x => x.zoneName == zone))
             {
                 CrestronConsole.PrintLine("Userful Module: Source Named {0} doesnt exist!", source);
                 CrestronConsole.PrintLine("Available Sources:");
-                sources.sources.ForEach(x => CrestronConsole.PrintLine( "Name: {0), Id: {1}", x.sourceName, x.sourceId));
+                sources.sources.ForEach(x => CrestronConsole.PrintLine( "Name: {0}, Id: {1}", x.sourceName, x.sourceId));
             }
             else if(sources.sources.Exists(x => x.sourceName == source))
             {
                 CrestronConsole.PrintLine("Userful Module: Zone Named {0} doesnt exist!", zone);
                 CrestronConsole.PrintLine("Available Zones:");
-                zones.zones.ForEach(x => CrestronConsole.PrintLine( "Name: {0), Id: {1}", x.zoneName, x.zoneId));
+                zones.zones.ForEach(x => CrestronConsole.PrintLine( "Name: {0}, Id: {1}", x.zoneName, x.zoneId));
             }
             else
             {
                 CrestronConsole.PrintLine("Userful Module: Source Named {0} doesnt exist!", source);
                 CrestronConsole.PrintLine("Available Sources:");
-                sources.sources.ForEach(x => CrestronConsole.PrintLine( "Name: {0), Id: {1}", x.sourceName, x.sourceId));
+                sources.sources.ForEach(x => CrestronConsole.PrintLine( "Name: {0}, Id: {1}", x.sourceName, x.sourceId));
                 CrestronConsole.PrintLine("Userful Module: Zone Named {0} doesnt exist!", zone);
                 CrestronConsole.PrintLine("Available Zones:");
-                zones.zones.ForEach(x => CrestronConsole.PrintLine( "Name: {0), Id: {1}", x.zoneName, x.zoneId));
+                zones.zones.ForEach(x => CrestronConsole.PrintLine( "Name: {0}, Id: {1}", x.zoneName, x.zoneId));
             }
             getSysInfo();
         }
@@ -302,7 +306,7 @@ namespace Userful
             {
                 CrestronConsole.PrintLine("Userful Module: Zone Named {0} doesnt exist!", zone);
                 CrestronConsole.PrintLine("Available Zones:");
-                zones.zones.ForEach(x => CrestronConsole.PrintLine( "Name: {0), Id: {1}", x.zoneName, x.zoneId));
+                zones.zones.ForEach(x => CrestronConsole.PrintLine( "Name: {0}, Id: {1}", x.zoneName, x.zoneId));
             }
             getSysInfo();
         }
@@ -316,6 +320,27 @@ namespace Userful
         public ushort SourceInUseByName(string name)
         {
             return Convert.ToUInt16(sources.inUseByName(name));
+        }
+
+        public void FindSourcesInUse()
+        {
+            sources.sources.ForEach(x =>
+            {
+                if(debug == 1)
+                {
+                    CrestronConsole.PrintLine("Finding Sources in Use");
+                    CrestronConsole.PrintLine("SIU: Source Name: {0}, Source ID: {1}", x.sourceName, x.sourceId);
+                    foreach (var zone in zones.zones)
+	                {
+                	    CrestronConsole.PrintLine("SIU: Zone: {0}, CurrentSourceID: {1}", zone.zoneName, zone.playingSourceId);	 
+	                }
+                }
+                if(zones.zones.Exists(y => y.playingSourceId == x.sourceId ))
+                {
+                    if (debug == 1) { CrestronConsole.PrintLine("SIU: Setting Source: {0} to inUse", x.sourceName); }
+                    x.setInUse(true);
+                }
+            });
         }
     }
  }

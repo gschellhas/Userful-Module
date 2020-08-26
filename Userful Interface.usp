@@ -80,7 +80,7 @@ CHANGE SetZoneSource
 	Integer i, val;
 	i = GetLastModifiedArrayIndex();
 	val = SetZoneSource[GetLastModifiedArrayIndex()];
-	UF.setZoneSources(ZoneName[i], SourceName[val]);
+	UF.setZoneSources(ZoneName[i], SourceName[val+1]);
 }
 
 CHANGE SetDisplay
@@ -93,7 +93,7 @@ eventhandler updateSources (UserfulSource sender, EventArgs args)
 	integer i;
 	for(i = 1 to 10)
 	{
-		SourceAvailable[i] = UF.SourceInUseByName(SourceName[i]);
+		SourceAvailable[i] = !UF.SourceInUseByName(SourceName[i]);
 	}
 }
 
