@@ -42,7 +42,20 @@ namespace Userful
 
     public class UserfulSource
     {
-        public List<SourcesItem> sources { get; set; } 
+        public List<SourcesItem> sources { get; set; }
+
+        public bool inUseByName(string name)
+        {
+            if (sources.Exists(x => x.sourceName == name))
+                return sources.Find(x => x.sourceName == name).getInUse();
+            else
+                return false;
+        }
+
+        public void setAllNotInUse()
+        {
+            sources.ForEach(x => x.setInUse(false));
+        }
     }
 
 
