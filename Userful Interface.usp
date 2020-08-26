@@ -18,6 +18,47 @@ Comments:
 #DEFAULT_VOLATILE
 #ENABLE_TRACE
 #DEFINE_CONSTANT DEBUG 1
+
+#HELP_BEGIN
+
+[Inputs]
+GetSystemInfo - A rising edge on this input will send a poll to the Userful system and retrieve all of the Sources,
+	Zones, and Preset info.  Once recieved it will review all the sources and update SourceAvailable[] if a source is
+	being used.  This signal is also called internally any time a Source or Preset is changed.
+
+SetPreset[x] - A rising edge on this input will switch the active preset inside the Userful server.  The preset names are
+	entered in through the SourceName[] serial inputs.
+
+SetZone[x] - A change on the this analog input will change the source being sent to the zone by "destinationSourceName".
+	The zone names are entered in through the ZoneName[] serial inputs.  The source names are entered in through the
+	SourceName[] serial inputs.
+
+SetDisplay[x] - A change on the this analog input will change the source being sent to the display by "destinationSourceName".
+	Currently, these inputs are disconnected and DO NOT function.  Would like to instantiate these fields by
+	retrieving them from the Userful server when they are requested/created/modified.
+
+
+[Outputs]
+SourceAvaialbe[x] - On any change or GetSystemInfo request, the module will compare the Zones and sources to see if any source
+	is in use.  If a source is in use, the signal will go low.  Only a single Live Video source can be routed to a zone at one
+	time unless a mirror group is in use.  It is recommended to tie these signals to the Source Enabled Joins unless you are not
+	using a Live input source, such as a capture card.
+
+SourceID$[x] - These signals will be updated with the SourceID's from the Userful system.  These are only used for debugging.
+
+Zone_Fb[x] - This signal shows the value of the zone's current source selection.  Currently, this is disconnected and 
+	will need a delegate function created to facilitate the feedback from the USerful server.
+
+Display_Fb[x] - This signal shows the value of the display's current source selection.  Currently, this is disconnected and 
+	will need a delegate function created to facilitate the feedback from the USerful server.
+
+[Parameters]
+Url$ - Enter the address of the Userful server with port #9000 (http://xxx.xxx.xxx.xxx:9000).
+UserName$ - Enter the username created inside of the Userful server to access the API.
+Password$ - Enter the password created inside of the Userful server to access the API.
+
+#HELP_END
+
 /*******************************************************************************************
   Include Libraries
   (Uncomment and include additional libraries as needed)
